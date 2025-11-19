@@ -1,0 +1,77 @@
+models:
+  - name: stg_customers
+    description: "All customers in the mall"
+    columns:
+      - name: customer_id
+        data_tests:
+          - unique
+          - not_null
+      - name: nation_id
+        description: "Nation identifier for the customer"
+        data_tests:
+          - relationships:
+              to: ref('stg_nations')
+              field: nation_id
+         
+  - name: stg_regions
+    description: "All regions in the world"
+    columns:
+      - name: region_id
+        description: '{{ doc("Primary_Key")}}'
+        data_tests:
+          - unique
+          - not_null
+      - name: region_name
+        description: "Name of the region"
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ['AFRICA','AMERICA','ASIA']
+                config:
+                  store_failures: true
+                  schema: error
+
+  - name: stg_nations
+    description: "All nations with their regions"
+    columns:
+      - name: region_id
+        description: '{{ doc("Foreign_Key")}}'
+        data_tests:
+          - relationships:
+              to: ref('stg_regions')
+              field: region_id
+      - name: nation_id
+        data_tests:
+          - unique
+          - not_null
+    
+  - name: stg_orders
+    description: "All orders placed by customers"
+    columns:
+      - name: customer_id
+        description: '{{ doc("Primary_Key")}} Surrogate key column for customer'
+        data_tests:
+          - relationships:
+              to: ref('customers')
+              field: customer_id
+      - name: order_id
+        data_tests:
+          - unique
+          - not_null
+      - name: status_code
+        data_tests:  
+          - accepted_values:
+              values: ['O','F','P']
+  - name: stg_line_items
+    description: "All items for each order"
+    columns:
+      - name: order_item_id
+        description: "Surrogate key column for lineitem"
+
+seeds:
+  - name: SUPPLIERS
+    config:
+      alias: supplier_names
+
+
+  
