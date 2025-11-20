@@ -1,4 +1,7 @@
-{{ config(materialized="view") }}
+{#{{ config(materialized="view",tags='sample',
+        pre_hook="use warehouse test_wh",
+        post_hook="select * from analytics.dbt_vel.stg_regions"
+) }}#}
 
 with
     customer as (
@@ -16,4 +19,4 @@ with
     )
 
 select *
-from customer limit 100
+from customer 

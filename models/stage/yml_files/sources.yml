@@ -10,6 +10,7 @@ sources:
       - name: lineitems
       - name: orders
       - name: suppliers
+      - name: partsupps
       - name: parts
         config:
           freshness:

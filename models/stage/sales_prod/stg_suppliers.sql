@@ -1,3 +1,6 @@
+{{config(materialized='ephemeral')}}
+
+
 WITH supply AS (
     SELECT
         -- ids
