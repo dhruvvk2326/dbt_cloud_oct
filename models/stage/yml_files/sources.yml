@@ -9,14 +9,15 @@ sources:
       - name: v_nations
       - name: lineitems
       - name: orders
-      - name: suppliers
-      - name: partsupps
-      - name: parts
         config:
           freshness:
             warn_after: {count: 3, period: day}  #
             error_after: {count: 3, period: day} #if same value error takes priority over warn
           loaded_at_field: o_orderdate::timestamp_ntz
+      - name: suppliers
+      - name: partsupps
+      - name: parts
+        
 
   - name: src2
     database: mkmotors_dev
