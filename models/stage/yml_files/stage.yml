@@ -1,5 +1,8 @@
 models:
   - name: stg_customers
+    config: 
+      group: sales
+      pre_hook: "alter session set query_tag = 'hooks'"
     description: "All customers in the mall"
     columns:
       - name: customer_id
@@ -12,7 +15,7 @@ models:
           - relationships:
               to: ref('stg_nations')
               field: nation_id
-         
+
   - name: stg_regions
     description: "All regions in the world"
     columns:
@@ -26,21 +29,40 @@ models:
         data_tests:
           - accepted_values:
               arguments:
-                values: ['AFRICA','AMERICA','ASIA']
+                values: ['AFRICA','AMERICA','ASIA','EUROPE','MIDDLE EAST','SOUTH EAST']
                 config:
                   store_failures: true
                   schema: error
 
   - name: stg_nations
+    config: 
+      group: sales
+      contract: 
+        enforced: true
     description: "All nations with their regions"
     columns:
       - name: region_id
+        data_type: int
         description: '{{ doc("Foreign_Key")}}'
         data_tests:
           - relationships:
               to: ref('stg_regions')
               field: region_id
       - name: nation_id
+        data_type: int
+        constraints: 
+          - type: not_null
+      
+      - name: nation_name
+        data_type: string
+        constraints: 
+          - type: not_null
+
+      - name: updated_at
+        data_type: timestamp
+        constraints: 
+          - type: not_null
+          
         data_tests:
           - unique
           - not_null

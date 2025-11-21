@@ -1,0 +1,47 @@
+WITH customer AS (
+    SELECT
+        c_custkey AS customer_id,
+        c_nationkey AS nation_id,
+        c_name AS customer_name,
+        c_address AS customer_address,
+        c_phone AS customer_phone,
+        c_acctbal AS account_balance,
+        c_mktsegment AS market_segment,
+        c_comment AS customer_comment
+    FROM {{ ref('stg_customers') }}
+),
+nation AS (
+    SELECT
+        n_regionkey AS region_id,
+        n_nationkey AS nation_id,
+        n_name AS nation_name,
+        updated_at
+    FROM {{ ref('stg_nations') }}
+),
+region AS (
+    SELECT
+        r_regionkey AS region_id,
+        r_name AS region_name,
+        r_comment AS region_comment
+    FROM {{ ref('stg_regions') }}
+),
+combined AS (
+    SELECT
+        sc.customer_id,
+        sc.customer_name,
+        sc.customer_address,
+        sc.customer_phone,
+        sc.account_balance,
+        sc.market_segment,
+        sc.customer_comment,
+        n.nation_name,
+        n.nation_id,
+        n.updated_at,
+        r.region_id,
+        r.region_name,
+        r.region_comment
+    FROM customer sc
+    JOIN nation n ON sc.nation_id = n.nation_id
+    JOIN region r ON n.region_id = r.region_id
+)
+SELECT * FROM combined

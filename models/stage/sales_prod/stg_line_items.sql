@@ -3,7 +3,8 @@ with source as (
 ),
 
 line as(
-select concat(l_orderkey,l_linenumber)::number as order_item_id,
+select 
+        {{ dbt_utils.generate_surrogate_key(['l_orderkey', 'l_linenumber'])}} as order_item_id,
        l_orderkey as order_id,
        l_partkey as part_id,
        l_suppkey as supplier_id,
