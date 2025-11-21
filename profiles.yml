@@ -1,5 +1,3 @@
-
-
 dbt_cloud:
   outputs:
     dev:
@@ -12,4 +10,5 @@ dbt_cloud:
       type: snowflake
       user: sachin
       warehouse: TRANSFORM_WH
+
   target: dev
