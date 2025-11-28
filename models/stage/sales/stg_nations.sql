@@ -9,8 +9,8 @@ with nation as (
 select  n_regionkey as region_id,
         n_nationkey as nation_id,
         n_name as nation_name,
-        updated_at 
-
+        updated_at,
+        {{dbt_meta()}},
 from {{ source('src', 'nations') }}
 )
 

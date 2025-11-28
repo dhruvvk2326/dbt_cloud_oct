@@ -1,0 +1,13 @@
+exposures:
+  - name: powerbi_sales_dashboard
+    type: dashboard
+    maturity: high
+    url: https://app.powerbi.com/groups/bdb60e63-9137-43a1-82d8-094054948f2b/reports/f0f48d9a-0e42-4bb0-9c04-d699ff5b4c45/9de2708984518b658d16
+    description: "Sales dashboard in Power BI that uses curated dbt models."
+    depends_on:
+      - ref('stg_nations')
+      - ref('int_customers')
+    owner:
+      name: Data Analytics Team
+      email: analytics@example.com
+

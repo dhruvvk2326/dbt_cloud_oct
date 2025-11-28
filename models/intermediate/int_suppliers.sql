@@ -1,5 +1,5 @@
 
-{{config(tags='sample')}}
+{{config(tags='sample',materialized='table')}}
 
 with suppliers as (
     select
@@ -35,22 +35,21 @@ final as (
     select
         -- Supplier columns
         s.supplier_id,
-        s.nation_id,
+  
         s.supplier_name,
-        s.supplier_address,
-        s.phone_number,
-        s.supplier_comment,
         s.account_balance,
-        s.supplier_updated_time,
+         s.phone_number,
+        s.supplier_address,
 
         -- Nation columns
         n.nation_name,
-        n.region_id,
-        n.nation_updated_at,
+
 
         -- Region columns
         r.region_name,
-        r.region_comment
+        s.supplier_updated_time,
+        {{dbt_meta()}}
+
 
     from suppliers s
     join nations n 

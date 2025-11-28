@@ -21,7 +21,8 @@ changed as (
         o_shippriority as ship_priority,
 
         --dates
-        o_orderdate as order_date -- Removed the trailing comma here
+        o_orderdate as order_date,
+        updated_at -- Removed the trailing comma here
     from source
 )
 

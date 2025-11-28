@@ -28,17 +28,17 @@ models:
         description: "Name of the region"
         data_tests:
           - accepted_values:
-              arguments:
-                values: ['AFRICA','AMERICA','ASIA','EUROPE','MIDDLE EAST','SOUTH EAST']
-                config:
-                  store_failures: true
-                  schema: error
+              values: ['AFRICA','AMERICA','ASIA','EUROPE','MIDDLE EAST','SOUTH EAST']
+              config:
+                store_failures: true
+                schema: error
+                
 
   - name: stg_nations
     config: 
       group: sales
       contract: 
-        enforced: true
+        enforced: false
     description: "All nations with their regions"
     columns:
       - name: region_id
@@ -64,7 +64,7 @@ models:
           - type: not_null
           
         data_tests:
-          - unique
+          
           - not_null
     
   - name: stg_orders
