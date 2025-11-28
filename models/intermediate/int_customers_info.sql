@@ -1,39 +1,48 @@
--- WITH customer AS (
---     SELECT
---         c_custkey AS customer_id,
---         c_nationkey AS nation_id,
---         c_name AS customer_name,
---         c_address AS customer_address,
---         c_phone AS customer_phone,
---         c_acctbal AS account_balance,
---         c_mktsegment AS market_segment,
---         c_comment AS customer_comment
---     FROM {{ ref('stg_customers') }}
--- ),
--- nation AS (
---     SELECT
---         n_regionkey AS region_id,
---         n_nationkey AS nation_id,
---         n_name AS nation_name,
---         updated_at
---     FROM {{ ref('stg_nations') }}
--- ),
--- region AS (
---     SELECT
---         r_regionkey AS region_id,
---         r_name AS region_name,
---         r_comment AS region_comment
---     FROM {{ ref('stg_regions') }}
--- ),
--- combined AS (
-    -- SELECT
-    --     sc.customer_id,
-    --     sc.customer_name,
-    --     first ordered at , last oreders at , lifetime prders , lifetime tax , lifetime total , customer type , if new customer or repeated customer 
-    --           n.nation_id
-       
---     FROM customer sc
---     JOIN nation n ON sc.nation_id = n.nation_id
---     JOIN region r ON n.region_id = r.region_id
--- )
--- SELECT * FROM combined
+
+with combined as(
+SELECT 
+    c.customer_id,
+    c.NAME,
+    c.market_segment AS Customer_Market_Segment,
+    
+    MIN(o.order_date) AS First_Ordered_At,
+    
+    MAX(o.order_date) AS Last_Ordered_At,
+    
+    COUNT(DISTINCT o.order_id) AS Lifetime_Orders,
+    
+
+    SUM(l.extended_price * l.tax) AS Lifetime_Tax,
+
+    SUM(l.extended_price * (1 - l.discount) * (1 + l.tax)) AS Lifetime_Total,
+    
+
+    CASE 
+        WHEN SUM(l.extended_price * (1 - l.discount) * (1 + l.tax)) > 500000 THEN 'VIP'
+        WHEN SUM(l.extended_price * (1 - l.discount) * (1 + l.tax)) BETWEEN 100000 AND 500000 THEN 'Mid-Tier'
+        ELSE 'Low Spender'
+    END AS Customer_Spending_Type,
+
+
+    CASE 
+        WHEN COUNT(DISTINCT o.order_id) > 1 THEN 'Repeated Customer'
+        ELSE 'New Customer'
+    END AS Customer_Status
+
+FROM 
+    {{ref('stg_customers')}} c
+JOIN 
+    {{ref('stg_orders')}} o 
+    ON c.customer_id = o.customer_id
+JOIN 
+    {{ref('stg_line_items')}} l 
+    ON o.order_id = l.order_id
+GROUP BY 
+    c.customer_id, 
+    c.name, 
+    c.market_segment
+ORDER BY 
+    Lifetime_Total DESC
+)
+
+select * from combined

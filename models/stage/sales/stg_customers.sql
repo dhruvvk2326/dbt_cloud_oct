@@ -13,7 +13,8 @@ with
             c_phone as phone,
             c_acctbal as account_balance,
             c_mktsegment as market_segment,
-            c_comment as comment
+            c_comment as comment,
+            updated_at
 
         from {{ source("src", "customers") }} 
     )
